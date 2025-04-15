@@ -44,6 +44,10 @@ scene.add( ball );
 
 camera.position.z = 5;
 
+
+
+
+
 const clock = new THREE.Clock();
 function animate(){
     const delta = clock.getDelta();
@@ -99,9 +103,39 @@ loader.load('assets/dog_shiny.gltf', function(gltf){
 
     mixer = new THREE.AnimationMixer(dog);
     const clips = gltf.animations;
-    const clip = THREE.AnimationClip.findByName(clips, 'tail')
-    const action = mixer.clipAction(clip);
-    action.play();
+    const clipPant = THREE.AnimationClip.findByName(clips, 'pant')
+    const actionPant = mixer.clipAction(clipPant);
+    // actionPant.play();
+
+    const clipTail = THREE.AnimationClip.findByName(clips, 'tail')
+    const actionTail = mixer.clipAction(clipTail);
+    actionTail.play();
+
+   
+    //~~~~~~~~~~~~~~~~~~Event Listener~~~~~~~~~~~~~~~~~~~
+
+let mouseIsDown = false;
+
+document.querySelector("body").addEventListener("mousedown", () => {
+    actionPant.play();
+    actionPant.paused = false;
+    mouseIsDown = true;
+    console.log("mousedown");
+})
+
+document.querySelector("body").addEventListener("mouseup", () => {
+    // actionPant.stop();
+    mouseIsDown = false;
+    actionPant.paused = true;
+    console.log("mouseup");
+})
+
+document.querySelector("body").addEventListener("mousemove", () => {
+    if (mouseIsDown) {
+    console.log("mousemove");
+    ball.rotaion.x += .5;
+}
+})
 
 
 });
