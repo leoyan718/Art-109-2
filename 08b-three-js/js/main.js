@@ -3,6 +3,12 @@
 
 
 //~~~~~~~Import Three.js (also linked to as import map in HTML)~~~~~~
+let sceneContainer = document.querySelector
+("#scene-container");
+
+let piano;
+
+
 import * as THREE from 'three';
 
 // Import add-ons
@@ -12,43 +18,60 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ~~~~~~~~~~~~~~~~Set up~~~~~~~~~~~~~~~~
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+scene.background = new THREE.Color(0x7f9cf5);
+
+
+
+const camera = new THREE.PerspectiveCamera(75, sceneContainer.clientWidth / sceneContainer.clientHeight, 0.1, 1000);
 
 const light = new THREE.DirectionalLight(0xffffff, 3)
 light.position.set(1,1,5);
 scene.add(light);
 
 const renderer = new THREE.WebGLRenderer({antialias: true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
+sceneContainer.appendChild(renderer.domElement);
 
-const geometry = new THREE.OctahedronGeometry( 1, 4, 2 );
+const geometry = new THREE.SphereGeometry( .2, 36, 16 );
 // const material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
 
 const texture = new THREE.TextureLoader().load('textures/icecube.jpg')
 const material = new THREE.MeshBasicMaterial( { map: texture } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+
+const ball = new THREE.Mesh( geometry, material );
+scene.add( ball );
 
 camera.position.z = 5;
 
 function animate(){
     requestAnimationFrame(animate);
 
-    // cube.rotation.x += 0.01;
-    // cube.rotation.y += 0.01;
+    ball.rotation.x += 0.01;
+    ball.rotation.y += 0.01;
+
+    ball.position.x = Math.sin(Date.now() / 2000) * 2;
+    ball.position.y = Math.sin(Date.now() / 4000) * 2;
+    ball.position.z = Math.sin(Date.now() / 5000) * 2;
+    // console.log(ball.position.x);
+
+    if(piano){
+    // piano.rotation.x += 0.01;
+    // piano.rotation.y += 0.01;
+    piano.rotation.y = Math.sin(Date.now() / 4000) * 2;
+    }   
 
     renderer.render(scene, camera);
 }
 
 function onWindowResize() {
-    camera.aspect = window,innerWidth / window.innerHeight;
+    camera.aspect = sceneContainer.clientWidth / sceneContainer.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(sceneContainer.clientWidth, sceneContainer.clientHeight);
 
 }
 
 window.addEventListener('resize', onWindowResize, false);
+
 
 const lightleft = new THREE.DirectionalLight (0xffffff,3);
 lightleft.position.set(3,4,5);
@@ -60,10 +83,13 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const loader = new GLTFLoader(); // to load 3d models
 
 loader.load('assets/piano1.gltf', function(gltf){
-    const piano = gltf.scene;
+    piano = gltf.scene;
     scene.add(piano);
-    model.scale.set(1,1,1);
-})
+    piano.scale.set(1,1,1);
+    piano.position.y = -2;
+
+
+});
 
 
 
