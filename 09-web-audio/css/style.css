@@ -1,0 +1,15 @@
+body{
+    margin: 0;
+}
+
+
+#scene-container{
+    background-color:black;
+    width: 80vw;
+    height: 800px;
+    margin: 0 auto;
+}
+
+#play-button{
+    /* visibility: hidden;  keeps dissapearing */
+}
